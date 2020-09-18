@@ -5,6 +5,3 @@
 %Test test test 
 %Hund hund hund test
 
-
-
-HEJ
