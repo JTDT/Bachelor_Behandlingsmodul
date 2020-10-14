@@ -1,34 +1,49 @@
-% Processing raw data from Arduino and pulsoximeter
+function [heartRate,SpO2] = processRawData
+% The function processRawData collects data from Arduino Uno R3 by reading
+% from computer port. The functions returns the variable rawData, which
+% contains the data from arduino. 
+% rawData = struct with 10 raw measurements
 %% Clean up
-clear a;
+clear s;
 clear,clc, close all
 %% Get pulse and O2 saturation
-comPort = serialportlist('available')
-arduino = serial(comPort(1),'BaudRate',115200);
-i=0;
-fopen(arduino);
-while (i<10)  % Should run continuosly?
-    fprintf(arduino,'Your serial data');
-    output = fscanf(arduino);  % Data type is char.
-    outputstr = convertCharsToStrings(output); % Convert to string
-    % get only values for Heart rate and 0xygen saturation
-    bioData = contains(outputstr,['Heartrate','Oxygen']);
-    if (bioData == 1)
-        sprintf(bioData)
-    end
-    i=i+1;
-end
-fclose(arduino);
 
-%% Connect to Arduino Hardware and include the I2C library
-port = 'COM3'; % check in device manager
-a = arduino(port,'Uno','Libraries','I2C');
-% Scans for available I2C addresses.
-addresses = scanI2CBus(a);
-% Create the I2C device object
-i2c_device = device(a,'I2CAddress','0x55')
-% Read data 
-sensor_data = read(i2c_device,8,'uint8')
+% Setup serial connection
+comPort = serialportlist('available');
+s = serial(comPort(1),'BaudRate',115200); 
+
+% Open connection
+fopen(s);
+
+% Make call asynchron
+% OBS: fscanf is a syncron call and will block the command window until 
+% all operations is done --> output comes at the end, when loop is over
+s.ReadAsyncMode = 'continuous';
+readasync(s);
+
+% Preallocate variables for time-optimization 
+%rawData = NaN(10,1); 
+i = 0;
+% s.BytesAvailable
+while (true)  % Should run continuosly when data is available
+    fprintf(s,'BioData');
+    rawData = fscanf(s);  % Data type is char. 
+    rawData = convertCharsToStrings(rawData); % Convert data to strings
+    bioData = split(rawData,':'); % splits data - HR:SpO2:Conficence:Status
+    bioData = str2double(bioData);
+    % Check confidence is over 95% and status of finger detected (equals 3)
+    if bioData(3)>= 95 && bioData(4)==3
+        heartRate = bioData(1)
+        SpO2 = bioData(2)
+    end
+     i = i+1;
+end
+
+% Close the serial port connection
+fclose(s);
+delete(s);
+clear s;
+end 
 
 
 
