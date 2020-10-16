@@ -1,8 +1,10 @@
 function [heartRate,SpO2] = processRawData()
 % The function processRawData collects data from Arduino Uno R3 by reading
 % from computer port. The functions returns variables HR and SpO2.
-% heartRate = heart beats per minute
-% SpO2 = oxygen saturation in blood vessels
+% heartRate = array variable with 10 elements - each element represents one 
+%             measurement of pulse/heart rate (heart beats per minute) 
+% SpO2 = array variable with 10 elements - each element represent one 
+%        measurement of oxygen saturation in blood vessels
 %% Clean up
 clear s;
 clear,clc, close all;
@@ -24,10 +26,10 @@ readasync(s);
 % Preallocate variables for time-optimization
 heartRate = zeros(1,10);
 SpO2 = zeros(1,10);
-ii = 1;
+measurement = 1;
 s.BytesAvailableFcnMode = 'terminator';
 while (s.BytesAvailable < 1)  % Should run continuosly when data is available
-    for ii = 1:length(heartRate)
+    for measurement = 1:length(heartRate)
         fprintf(s,'BioData');
         rawData = fscanf(s);  % Data type is char.
         rawData = convertCharsToStrings(rawData); % Convert data to strings
@@ -37,13 +39,13 @@ while (s.BytesAvailable < 1)  % Should run continuosly when data is available
         if bioData(3)>= 95 && bioData(4)==3
             %         heartRate = bioData(1)
             %         SpO2 = bioData(2) 
-            heartRate(ii) = bioData(1)
-            SpO2(ii) = bioData(2)
+            heartRate(measurement) = bioData(1)
+            SpO2(measurement) = bioData(2)
         else
             disp('Finger detection error. Try replace finger')
         end
     end
-    ii = 1; % refill array with new data
+    measurement = 1; % refill array with new data
 end
 
 % Close the serial port connection
