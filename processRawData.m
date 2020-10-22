@@ -1,37 +1,34 @@
-function [heartRate,SpO2] = processRawData(HR_handle,SpO2_handle, MonitorState)
+function [heartRate,SpO2] = processRawData(serialObj,HR_handle,SpO2_handle)
 % The function processRawData collects data from Arduino Uno R3 by reading
 % from computer port. The functions returns variables HR and SpO2.
 % heartRate = pulse/heart rate (heart beats per minute)
 % SpO2 = oxygen saturation in blood vessels
+% serialObj = serial port object 
 % HR_handle = handle to heart rate label on GUI
 % SpO2_handle = handle to oxygen saturation label on GUI
-% MonitorState = A boolean that indicated if the monitor is started/stopped
 %% Get pulse and O2 saturation
 
-
-if (MonitorState == true)
 % Setup serial connection
 %comPorts = serialportlist('available');
-comPort = 'COM3';
-s = serial(comPort,'BaudRate',115200);
-
-% Open connection
-fopen(s);
-end
+% comPort = 'COM3';
+% s = serial(comPort,'BaudRate',115200);
+% 
+% % Open connection
+% fopen(s);
  
 % Make call asynchron
 % OBS: fscanf is a syncron call and will block the command window until
 % all operations is done --> output comes at the end, when loop is over
-s.ReadAsyncMode = 'continuous';
-readasync(s);
+serialObj.ReadAsyncMode = 'continuous';
+readasync(serialObj);
 
 % Preallocate variables for time-optimization
 measurement = 1;
-s.BytesAvailableFcnMode = 'terminator';
+serialObj.BytesAvailableFcnMode = 'terminator';
 %while (s.BytesAvailable < 1)  % Should run continuosly when data is available
-    for measurement = 1:20 % put in array
-        fprintf(s,'BioData');
-        rawData = fscanf(s);  % Data type is char.
+    %for measurement = 1:20 % put in array
+        fprintf(serialObj,'BioData');
+        rawData = fscanf(serialObj);  % Data type is char.
         rawData = convertCharsToStrings(rawData); % Convert data to strings
         bioData = split(rawData,':'); % splits data -> HR:SpO2:Conficence:Status
         bioData = str2double(bioData);
@@ -47,15 +44,13 @@ s.BytesAvailableFcnMode = 'terminator';
         else
             disp('Finger detection error. Try replace finger')
        end
-    end
+   % end
 %end
 
-if (Monitor == false)
 % Close the serial port connection
-fclose(s);
-delete(s);
-clear s;
-end 
+% fclose(s);
+% delete(s);
+% clear s;
 end
 
 
