@@ -1,18 +1,28 @@
-function[valueColor, frekvens] = Alarm(alarmState)
+function Alarm(alarmState)
 % forklarende tekst 
-%% Hen lydfil der skal afspilles som alarm
+%global player; % skal variabel være global ?
+%% Hent lydfil der skal afspilles som alarm
 [y, Fs] = audioread('alarmMedPause.wav');
 player = audioplayer(y, Fs);
 
 %% Play alarm for HR
-alarmState = true;
+%alarmState = false;
 % spil lydfil
+if alarmState == false
+    %playblocking(player).stop;
+    %stop(player);
+    clear player;
+end
+
 while alarmState == true    
+    %play(player);
     playblocking(player);   
     
 end
 % sæt farve til rød
+%valueColor = "red";
 % blinkende frekvens til 2 Hz
+% frekvens = 2;
 % Arbejdscyklus: 50% 
 %% Play alarm for SpO2
 % spil lydfil
@@ -22,5 +32,12 @@ end
 % spil lydfil
 
 %% mute alarm
-% symbol
 % måske denne skal ind i main appen??
+%alarmState = "pause";
+%if alarmState == "pause"
+    % Vis symbol -> gøres i mainappen??
+%    pause(5);
+%    Alarm(true);
+    % fjern symbol
+%end
+end
