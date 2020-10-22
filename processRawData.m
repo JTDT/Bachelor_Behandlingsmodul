@@ -1,22 +1,24 @@
-function [heartRate,SpO2] = processRawData(handle,event,HR_handle,SpO2_handle)
+function [heartRate,SpO2] = processRawData(HR_handle,SpO2_handle, MonitorState)
 % The function processRawData collects data from Arduino Uno R3 by reading
 % from computer port. The functions returns variables HR and SpO2.
-% heartRate = array variable with 10 elements - each element represents one
-%             measurement of pulse/heart rate (heart beats per minute)
-% SpO2 = array variable with 10 elements - each element represent one
-%        measurement of oxygen saturation in blood vessels
-%% Clean up
-% clear s;
-% clear,clc, close all;
+% heartRate = pulse/heart rate (heart beats per minute)
+% SpO2 = oxygen saturation in blood vessels
+% HR_handle = handle to heart rate label on GUI
+% SpO2_handle = handle to oxygen saturation label on GUI
+% MonitorState = A boolean that indicated if the monitor is started/stopped
 %% Get pulse and O2 saturation
 
+
+if (MonitorState == true)
 % Setup serial connection
-comPort = serialportlist('available');
-s = serial(comPort(1),'BaudRate',115200);
+%comPorts = serialportlist('available');
+comPort = 'COM3';
+s = serial(comPort,'BaudRate',115200);
 
 % Open connection
 fopen(s);
-
+end
+ 
 % Make call asynchron
 % OBS: fscanf is a syncron call and will block the command window until
 % all operations is done --> output comes at the end, when loop is over
@@ -24,12 +26,10 @@ s.ReadAsyncMode = 'continuous';
 readasync(s);
 
 % Preallocate variables for time-optimization
-heartRate = zeros(1,10);
-SpO2 = zeros(1,10);
 measurement = 1;
 s.BytesAvailableFcnMode = 'terminator';
-while (s.BytesAvailable < 1)  % Should run continuosly when data is available
-    for measurement = 1:length(heartRate) % put in array
+%while (s.BytesAvailable < 1)  % Should run continuosly when data is available
+    for measurement = 1:20 % put in array
         fprintf(s,'BioData');
         rawData = fscanf(s);  % Data type is char.
         rawData = convertCharsToStrings(rawData); % Convert data to strings
@@ -37,27 +37,25 @@ while (s.BytesAvailable < 1)  % Should run continuosly when data is available
         bioData = str2double(bioData);
         % Check confidence is over 95% and status of finger detected (equals 3)
         if bioData(3)>= 95 && bioData(4)==3
-            %         heartRate = bioData(1)
-            %         SpO2 = bioData(2)
-           heartRate(measurement) = bioData(1)
-           SpO2(measurement) = bioData(2)
-            set(HR_handle,'string',num2str(bioData(1)));
-            set(SpO2_handle,'string',num2str(bioData(2)));
-            pause(0.01);
-            drawnow;
+            heartRate = bioData(1)
+            SpO2 = bioData(2)
+
+            set(HR_handle,'Text',num2str(bioData(1)));
+            set(SpO2_handle,'Text',num2str(bioData(2)));
+            drawnow % this updates the GUI immediatly at every iteration
             
         else
             disp('Finger detection error. Try replace finger')
        end
     end
-    measurement = 1; % refill array with new data
-end
+%end
 
-
+if (Monitor == false)
 % Close the serial port connection
 fclose(s);
 delete(s);
 clear s;
+end 
 end
 
 
