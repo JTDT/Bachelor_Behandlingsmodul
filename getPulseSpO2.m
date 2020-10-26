@@ -1,4 +1,4 @@
-function getPulseSpO2(serialObj,HR_handle,SpO2_handle)
+function [heartRate,SpO2] = getPulseSpO2(serialObj,HR_handle,SpO2_handle)
 % The function collects data from Arduino Uno R3 by reading
 % from computer port.
 % heartRate = pulse/heart rate (heart beats per minute)
@@ -10,7 +10,7 @@ function getPulseSpO2(serialObj,HR_handle,SpO2_handle)
 
 % Make call asynchron
 % OBS: fscanf is a syncron call and will block the command window until
-% all operations is done, which means the output comes at the end, when loop is over
+% all operations is done - making it asyncron will make it run back
 serialObj.ReadAsyncMode = 'continuous';
 readasync(serialObj);
 

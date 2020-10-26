@@ -9,12 +9,12 @@ function [heartRate,SpO2] = processRawData(serialObj,HR_handle,SpO2_handle)
 %% Get pulse and O2 saturation
 
 % Setup serial connection
-%comPorts = serialportlist('available');
-% comPort = 'COM3';
-% s = serial(comPort,'BaudRate',115200);
-% 
-% % Open connection
-% fopen(s);
+comPorts = serialportlist('available');
+comPort = 'COM3';
+serialObj = serial(comPort,'BaudRate',115200);
+
+% Open connection
+fopen(serialObj);
  
 % Make call asynchron
 % OBS: fscanf is a syncron call and will block the command window until
@@ -26,7 +26,7 @@ readasync(serialObj);
 measurement = 1;
 serialObj.BytesAvailableFcnMode = 'terminator';
 %while (s.BytesAvailable < 1)  % Should run continuosly when data is available
-    %for measurement = 1:20 % put in array
+    for measurement = 1:10 % put in array
         fprintf(serialObj,'BioData');
         rawData = fscanf(serialObj);  % Data type is char.
         rawData = convertCharsToStrings(rawData); % Convert data to strings
@@ -37,20 +37,20 @@ serialObj.BytesAvailableFcnMode = 'terminator';
             heartRate = bioData(1)
             SpO2 = bioData(2)
 
-            set(HR_handle,'Text',num2str(bioData(1)));
-            set(SpO2_handle,'Text',num2str(bioData(2)));
-            drawnow % this updates the GUI immediatly at every iteration
+            %set(HR_handle,'Text',num2str(bioData(1)));
+            %set(SpO2_handle,'Text',num2str(bioData(2)));
+            %drawnow % this updates the GUI immediatly at every iteration
             
         else
             disp('Finger detection error. Try replace finger')
        end
-   % end
+   end
 %end
 
 % Close the serial port connection
-% fclose(s);
-% delete(s);
-% clear s;
+fclose(serialObj);
+delete(serialObj);
+clear serialObj;
 end
 
 
