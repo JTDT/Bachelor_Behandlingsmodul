@@ -1,4 +1,4 @@
-function [heartRate,SpO2] = getPulseSpO2(serialObj,HR_handle,SpO2_handle)
+ function [heartRate,SpO2] = getPulseSpO2(serialObj,HR_label,SpO2_label)
 % The function collects data from Arduino Uno R3 by reading
 % from computer port.
 % heartRate = pulse/heart rate (heart beats per minute)
@@ -28,10 +28,9 @@ if bioData(3)>= 95 && bioData(4)==3
     heartRate = bioData(1)
     SpO2 = bioData(2)
     
-    set(HR_handle,'Text',num2str(bioData(1)));
-    set(SpO2_handle,'Text',num2str(bioData(2)));
+    set(HR_label,'Text',num2str(bioData(1)));
+    set(SpO2_label,'Text',num2str(bioData(2)));
     drawnow % this updates the GUI immediatly at every iteration
-    
 else
     disp('Finger detection error. Try replace finger')
 end
