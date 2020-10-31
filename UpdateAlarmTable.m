@@ -10,7 +10,7 @@ function UpdateAlarmTable(app, ii, MeasureType, MeasureValue, ThresholdMin, Thre
 
 app.AlarmTable{ii,1} = ii;
 app.AlarmTable{ii,2} = MeasureType;
-app.AlarmTable{ii,3} = Value;
+app.AlarmTable{ii,3} = MeasureValue;
 app.AlarmTable{ii,4} = ThresholdMin;
 app.AlarmTable{ii,5} = ThresholdMax;
 app.AlarmTable{ii,6} = time;
