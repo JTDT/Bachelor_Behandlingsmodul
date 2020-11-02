@@ -1,12 +1,6 @@
 function UpdateAlarmTable(app, ii, MeasureType, MeasureValue, ThresholdMin, ThresholdMax, time)
 
-% id = ii;
-% Type = MeasureType;
-% Value = MeasureValue;
-% Threshold_min = ThresholdMin
-% Threshold_max = ThresholdMax;
-% Time = time;
-
+% skal kun gemme ned når der udløses en ny alarm for HR eller Spo2
 
 app.AlarmTable{ii,1} = ii;
 app.AlarmTable{ii,2} = MeasureType;
