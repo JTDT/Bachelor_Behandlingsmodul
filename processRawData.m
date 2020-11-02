@@ -1,4 +1,4 @@
- function [heartRate,SpO2] = processRawData(serialObj,HR_label,SpO2_label)
+ function processRawData(~,~,app,serialObj,HR_label,SpO2_label)
 % The function collects data from Arduino Uno R3 by reading
 % from computer port.
 % heartRate = pulse/heart rate (heart beats per minute)
