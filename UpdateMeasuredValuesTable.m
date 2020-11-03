@@ -7,5 +7,5 @@ app.MeasuredValuesTable{jj,2} = HRvalue;
 app.MeasuredValuesTable{jj,3} = SpO2value;
 app.MeasuredValuesTable{jj,4} = time;
 
-%app.MeasuredValuesTable
+app.MeasuredValuesTable
 end

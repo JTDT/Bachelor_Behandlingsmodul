@@ -10,7 +10,7 @@ app.AlarmTable{ii,4} = ThresholdMin;
 app.AlarmTable{ii,5} = ThresholdMax;
 app.AlarmTable{ii,6} = time;
 
-app.AlarmTable % bruges til test -> skal slettes!!!
+%app.AlarmTable % bruges til test -> skal slettes!!!
 
 end
 
