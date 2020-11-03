@@ -11,29 +11,29 @@
 % Make call asynchron
 % OBS: fscanf is a syncron call and will block the command window until
 % all operations is done - making it asyncron will make it run back
-serialObj.ReadAsyncMode = 'continuous';
-readasync(serialObj);
-
-serialObj.BytesAvailableFcnMode = 'terminator';
+% serialObj.ReadAsyncMode = 'continuous';
+% readasync(serialObj);
+% serialObj.BytesAvailableFcnMode = 'terminator';
+serialObj = [];
 
 % Read data via serial port
-fprintf(serialObj,'BioData');
-rawData = fscanf(serialObj);  % Data type is char.
-rawData = convertCharsToStrings(rawData); % Convert data to strings
-bioData = split(rawData,':'); % splits data -> HR:SpO2:Conficence:Status
+comPort = 'COM3';
+serialObj = serialport(comPort,9600);
+rawData = strtrim(readline(serialObj));
+bioData = split(rawData,':'); % splits data -> HR:SpO2:Conficence:Status:[array]
 bioData = str2double(bioData);
 
 % Check confidence is over 95% and status of finger detected (equals 3)
-% if bioData(3)>= 95 && bioData(4)==3
+ if bioData(3)>= 95 && bioData(4)==3
     heartRate = bioData(1)
     SpO2 = bioData(2)
     
-    set(HR_label,'Text',num2str(bioData(1)));
-    set(SpO2_label,'Text',num2str(bioData(2)));
-    drawnow % this updates the GUI immediatly at every iteration
-% else
-%     disp('Finger detection error. Try replace finger')
-% end
+%     set(HR_label,'Text',num2str(bioData(1)));
+%     set(SpO2_label,'Text',num2str(bioData(2)));
+%     drawnow % this updates the GUI immediatly at every iteration
+ else
+     disp('Finger detection error. Try replace finger')
+end
 end
 
 
