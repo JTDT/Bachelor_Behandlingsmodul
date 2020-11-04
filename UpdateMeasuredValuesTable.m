@@ -1,4 +1,3 @@
-
 function UpdateMeasuredValuesTable(app, jj, HRvalue, SpO2value, time)
 
 % forklarende tekst 
