@@ -7,7 +7,8 @@ app.AlarmThresholdsTable {kk,3} = HRmax;
 app.AlarmThresholdsTable {kk,4} = SpO2min;
 app.AlarmThresholdsTable {kk,5} = SpO2max;
 app.AlarmThresholdsTable {kk,6} = time;
-
-app.AlarmThresholdsTable  % bruges til test -> skal slettes!!!
+disp(app.AlarmThresholdsTable{kk,6})
+%app.A
+%%app.AlarmThresholdsTable  % bruges til test -> skal slettes!!!
 
 end

@@ -9,7 +9,7 @@ app.AlarmTable{ii,3} = MeasureValue;
 app.AlarmTable{ii,4} = ThresholdMin;
 app.AlarmTable{ii,5} = ThresholdMax;
 app.AlarmTable{ii,6} = time;
-disp(app.AlarmTable{ii,6})
+%disp(app.AlarmTable{ii,6})
 %app.AlarmTable % bruges til test -> skal slettes!!!
 
 end
