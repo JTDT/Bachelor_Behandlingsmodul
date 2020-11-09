@@ -1,4 +1,4 @@
-function UpdateAlarmThresholdsTable(app, kk, HRmin, HRmax, SpO2min, SpO2max, time)
+function UpdateAlarmThresholdsTable(app, kk, HRmin, HRmax, SpO2min, SpO2max,time)
 % forklarende tekst 
 
 app.AlarmThresholdsTable{kk,1} = kk;
