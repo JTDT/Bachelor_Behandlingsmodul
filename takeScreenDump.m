@@ -1,15 +1,12 @@
- function [img] = takeScreenDump()
-%Inspireret af: https://www.youtube.com/watch?v=s19oD9bbU6U
+function [img] = takeScreenDump()
+%The function uses the Java awt robot to take a rectangular screenshot of the screen, when the user press the Save button in SaveDialogApp
+%img = the image of the screen capture, which the funtion returns 
+%Inspired by: https://www.youtube.com/watch?v=s19oD9bbU6U
 
-%Tag screenshot
+%Get screencapture
 robot = java.awt.Robot(); 
-
-%%%
 t = java.awt.Toolkit.getDefaultToolkit();
 rectangle = java.awt.Rectangle(t.getScreenSize()); 
-
-%%%
-%rectangle = java.awt.Rectangle(position(1),position(2),position(3),position(4));
 capture = robot.createScreenCapture(rectangle); 
 
 %Convert to an RBG image
